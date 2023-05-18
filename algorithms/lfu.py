@@ -28,20 +28,27 @@ def LFU(PageAccessSequence, Frames):
             if PageAccessSequence[i] not in listToInsert: # If page not found, do page replacement
                 freqOptions = []
                 sorted_frequency = dict(sorted(frequency.items(), key=lambda x: x[1]))
-                min = sorted_frequency[0]
+                min = 99999999
+                # Get min value from listToInsert
+                for num in listToInsert:
+                    if min >= frequency[num]:
+                        min = frequency[num]
+
                 # Get least frequencies
                 for k, v in sorted_frequency.items():
-                    if k in listToInsert and v <= min:
+                    if k in listToInsert and min == v:
+                        min = v
                         freqOptions.append(k)
-                    else:
-                        break
 
-                print(freqOptions)
+                print(PageAccessSequence[i], min, sorted_frequency, listToInsert, freqOptions)
 
                 for j in range(Frames):
                     if PageAccessSequence[i - Frames + j] in freqOptions:
                         listToInsert[ listToInsert.index(PageAccessSequence[i - Frames + j]) ] = PageAccessSequence[i]
+                        frequency[PageAccessSequence[i - Frames + j]] = 0
                         outputPageFault += 1
+                        break
+
 
         frequency[PageAccessSequence[i]] += 1
 
@@ -50,7 +57,8 @@ def LFU(PageAccessSequence, Frames):
 
     return outputFrames, outputPageFault
 
-inputPageAccessSequence = [7, 0, 2, 4, 3, 1, 4, 7, 2, 0, 4, 3, 0, 3, 2, 7]
+inputPageAccessSequence = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2]
+inputPageAccessSequence2 = [7, 0, 2, 4, 3, 1, 4, 7, 2, 0, 4, 3, 0, 3, 2, 7]
 inputFrames = 3
 list, pagefault = LFU(inputPageAccessSequence, inputFrames)
 
