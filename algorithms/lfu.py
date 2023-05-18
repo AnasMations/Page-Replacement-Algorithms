@@ -8,13 +8,14 @@ def LFU(PageAccessSequence, Frames):
     outputFrames = []
     outputPageFault = 0
 
-    listToInsert = []
-    frequency = {num: 0 for num in PageAccessSequence}
+    listToInsert = [] # Column list to insert each iteration to the Frames
+    frequency = {num: 0 for num in PageAccessSequence} # Frequencies for each process
+    fifoQueue = [] # Sorted FIFO Queue, first element to be replaced
 
     # Adding an empty list for each Frame
     for i in range(Frames):
         outputFrames.append([])
-        listToInsert.append(-1)
+        listToInsert.append(-1) # Indicate NONE values by -1
 
     for i in range(len(PageAccessSequence)):
         # Filling up initial Frames
@@ -22,6 +23,7 @@ def LFU(PageAccessSequence, Frames):
             for j in range(len(listToInsert)):
                 if listToInsert[j] == -1:
                     listToInsert[j] = PageAccessSequence[i]
+                    fifoQueue.append(PageAccessSequence[i])
                     outputPageFault += 1
                     break
         else:
@@ -34,24 +36,30 @@ def LFU(PageAccessSequence, Frames):
                     if min >= frequency[num]:
                         min = frequency[num]
 
-                # Get least frequencies
+                # Get least frequencies and add them to freqOptions
                 for k, v in sorted_frequency.items():
                     if k in listToInsert and min == v:
                         min = v
                         freqOptions.append(k)
 
-                print(PageAccessSequence[i], min, sorted_frequency, listToInsert, freqOptions)
+                #print(PageAccessSequence[i], min, sorted_frequency, listToInsert, fifoQueue, freqOptions)
 
-                for j in range(Frames):
-                    if PageAccessSequence[i - Frames + j] in freqOptions:
-                        listToInsert[ listToInsert.index(PageAccessSequence[i - Frames + j]) ] = PageAccessSequence[i]
-                        frequency[PageAccessSequence[i - Frames + j]] = 0
+                # Choosing page to replace based on the furthest page in the FIFO Queue and is in the freqOptions
+                for j in fifoQueue:
+                    if j in freqOptions:
+                        listToInsert[ listToInsert.index(j) ] = PageAccessSequence[i]
+                        frequency[j] = 0 # Setting replaced page freq with zero
                         outputPageFault += 1
                         break
+
+                # Update FIFO Queue
+                fifoQueue.append(PageAccessSequence[i]) # Add new process to end
+                fifoQueue = fifoQueue[1:] # Remove top process
 
 
         frequency[PageAccessSequence[i]] += 1
 
+        # Update the Frames with the updated listToInsert
         for j in range(Frames):
             outputFrames[j].append(listToInsert[j])
 
