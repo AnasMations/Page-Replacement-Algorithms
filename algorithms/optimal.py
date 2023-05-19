@@ -137,7 +137,7 @@ def OPTIMAL(PageAccessSequence, Frames):
     :return: return two variables (list of list) of the output for each frame & (int) count of page fault
     """
     # Variables Initialization
-    outputFrames = arr = [[-1] * len(PageAccessSequence) for _ in range(Frames)]
+    outputFrames = [[-1] * len(PageAccessSequence) for _ in range(Frames)]
     outputPageFault = 0
 
     # initialize the memory with initial frames
@@ -149,35 +149,35 @@ def OPTIMAL(PageAccessSequence, Frames):
 
         for j in range(i, Frames):
 
-            arr[i][j] = PageAccessSequence[i]
+            outputFrames[i][j] = PageAccessSequence[i]
 
 
     for page in range(Frames, len(PageAccessSequence)):
 
-        caseNumber, nonFoundPages = caseChecker(PageAccessSequence, arr, Frames, page)
+        caseNumber, nonFoundPages = caseChecker(PageAccessSequence, outputFrames, Frames, page)
 
         #  Case 1 : Page already exists & a Hit occurs
         if ( caseNumber == 1): 
-            arr = optimalCaseOneInitializer(Frames, page, PageAccessSequence[page], arr)
+            outputFrames = optimalCaseOneInitializer(Frames, page, PageAccessSequence[page], outputFrames)
                     
         # Case 2: All pages in the current column exist in the page reference string after the page to be placed & a page fault occurs
         elif( caseNumber == 2 ):
-            arr = optimalCaseTwoInitializer(PageAccessSequence, Frames, page, PageAccessSequence[page], arr)
+            outputFrames = optimalCaseTwoInitializer(PageAccessSequence, Frames, page, PageAccessSequence[page], outputFrames)
             outputPageFault += 1
 
         # Case 3: Only one page in the current column does not exist in the page reference string after the page to be placed & a page fault occurs
         elif( caseNumber == 3 ):
-            arr = optimalCaseThreeInitializer(Frames, page, PageAccessSequence[page], arr, nonFoundPages)
+            outputFrames = optimalCaseThreeInitializer(Frames, page, PageAccessSequence[page], outputFrames, nonFoundPages)
             outputPageFault += 1
 
         # Case 4: Two or more pages in the current column do not exist in the page reference string after the page to be placed & a page fault occurs
         else:
-            arr = optimalCaseFourInitializer(PageAccessSequence, Frames, page, PageAccessSequence[page], arr, nonFoundPages)
+            outputFrames = optimalCaseFourInitializer(PageAccessSequence, Frames, page, PageAccessSequence[page], outputFrames, nonFoundPages)
             outputPageFault += 1
 
     return outputFrames, outputPageFault
 
-inputPageAccessSequence = [1, 2, 3, 4, 2, 1, 5, 6, 2, 1, 2, 3, 7, 6, 3, 2, 1, 2, 3, 6]
+inputPageAccessSequence = [7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7]
 
 inputFrames = 3
 
