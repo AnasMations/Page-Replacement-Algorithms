@@ -162,17 +162,17 @@ def OPTIMAL(PageAccessSequence, Frames):
                     
         # Case 2: All pages in the current column exist in the page reference string after the page to be placed & a page fault occurs
         elif( caseNumber == 2 ):
-            optimalCaseTwoInitializer(PageAccessSequence, Frames, page, PageAccessSequence[page], arr)
+            arr = optimalCaseTwoInitializer(PageAccessSequence, Frames, page, PageAccessSequence[page], arr)
             outputPageFault += 1
 
         # Case 3: Only one page in the current column does not exist in the page reference string after the page to be placed & a page fault occurs
         elif( caseNumber == 3 ):
-            optimalCaseThreeInitializer(Frames, page, PageAccessSequence[page], arr, nonFoundPages)
+            arr = optimalCaseThreeInitializer(Frames, page, PageAccessSequence[page], arr, nonFoundPages)
             outputPageFault += 1
 
         # Case 4: Two or more pages in the current column do not exist in the page reference string after the page to be placed & a page fault occurs
         else:
-            optimalCaseFourInitializer(PageAccessSequence, Frames, page, PageAccessSequence[page], arr, nonFoundPages)
+            arr = optimalCaseFourInitializer(PageAccessSequence, Frames, page, PageAccessSequence[page], arr, nonFoundPages)
             outputPageFault += 1
 
     return outputFrames, outputPageFault
