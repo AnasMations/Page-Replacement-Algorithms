@@ -61,7 +61,11 @@ class MainWindow(QWidget):
 
         # Output Grid
         self.output_grid = QGridLayout()
-        bottom_layout.addLayout(self.output_grid)
+
+        # Create the grid frame
+        self.grid_frame = QFrame()
+        self.grid_frame.setLayout(self.output_grid)
+        bottom_layout.addWidget(self.grid_frame)
 
         # Page Faults Label
         self.page_fault_lbl = QLabel("")
@@ -109,10 +113,6 @@ class MainWindow(QWidget):
             QPushButton:hover {
                 opacity: 0.8;
             }
-
-            QGridLayout {
-                margin-top: 20px;
-            }
         """
         App.setStyleSheet(style_sheet)  # Set style sheet to the application
 
@@ -143,9 +143,9 @@ class MainWindow(QWidget):
         elif algorithm_name == "OPTIMAL":
             output_frames, output_page_fault = OPTIMAL(sequence, frames)
 
-        self.display_output(output_frames, output_page_fault)
+        self.display_output(sequence, output_frames, output_page_fault)
 
-    def display_output(self, output_frames, output_page_fault):
+    def display_output(self, sequence, output_frames, output_page_fault):
         """
         Function to display the output as a grid layout
         """
@@ -154,14 +154,30 @@ class MainWindow(QWidget):
             # Scan through the grid in reversed order so that you don't skip any items
             self.output_grid.itemAt(i).widget().deleteLater()
 
+        # Display Page Access Sequence
+        page_access_lbl = QLabel("Sequence:")
+        page_access_lbl.setStyleSheet("QLabel { color : green; }")
+        self.output_grid.addWidget(page_access_lbl, 0, 0)
+        for i_page in range(len(sequence)):
+            page_lbl = QLabel(str(sequence[i_page]))
+            page_lbl.setStyleSheet("QLabel { color : green; }")
+            self.output_grid.addWidget(page_lbl, 0, i_page + 1)
+
         # Display output frames
-        for i_frame in range(len(output_frames)):
-            frame_lbl = QLabel(f"Frame {i_frame +1}")
+        for i_frame in range(1, len(output_frames)+1):
+            frame_lbl = QLabel(f"Frame {i_frame}:")
             self.output_grid.addWidget(frame_lbl, i_frame, 0)
 
-            for i_page in range(len(output_frames[i_frame])):
-                page_lbl = QLabel(str(output_frames[i_frame][i_page]))
-                self.output_grid.addWidget(page_lbl, i_frame, i_page + 1)
+            for i_page in range(len(output_frames[i_frame-1])):
+                page_lbl = QLabel(str(output_frames[i_frame-1][i_page]))
+                
+                # Set label color to red if its value is not equal to the previous value
+                if (i_page > 0 and output_frames[i_frame-1][i_page] != output_frames[i_frame-1][i_page-1]) or (i_frame-1 == 0 and i_page == 0):
+                    page_lbl.setStyleSheet("QLabel { color : red; }")
+                
+                if(output_frames[i_frame-1][i_page] != -1):
+                    self.output_grid.addWidget(page_lbl, i_frame, i_page + 1)
+
 
         # Display total page faults
         self.page_fault_lbl.setText(f"Total Page Faults: {output_page_fault}")
