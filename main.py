@@ -23,6 +23,8 @@ class MainWindow(QWidget):
         self.setup_ui()
 
     def setup_ui(self):
+        self.setWindowTitle("Page Replacement Algorithms Visualizor")
+
         # Create layouts
         layout = QVBoxLayout()
         top_layout = QHBoxLayout()
@@ -31,6 +33,7 @@ class MainWindow(QWidget):
         
         # Title Text
         title = QLabel("Page Replacement Algorithms Visualizor")
+        title.setStyleSheet("QLabel { font-size: 22px; color: gray;}")
         layout.addWidget(title)
 
         # Frames Input
@@ -55,20 +58,22 @@ class MainWindow(QWidget):
         run_button.clicked.connect(self.run_algorithm)
         top_layout.addWidget(run_button)
 
-        # Output Labels
-        output_lbl = QLabel("Output:")
-        bottom_layout.addWidget(output_lbl)
-
         # Output Grid
         self.output_grid = QGridLayout()
 
         # Create the grid frame
         self.grid_frame = QFrame()
         self.grid_frame.setLayout(self.output_grid)
+        self.grid_frame.setStyleSheet("border-width: 1;"
+                               "border-radius: 0;"
+                               "border-style: solid;"
+                               "border-color: gray"
+                               )
         bottom_layout.addWidget(self.grid_frame)
 
         # Page Faults Label
         self.page_fault_lbl = QLabel("")
+        self.page_fault_lbl.setStyleSheet("QLabel { color : red; }")
         bottom_layout.addWidget(self.page_fault_lbl)
 
         # Add layouts to main layout
@@ -89,6 +94,7 @@ class MainWindow(QWidget):
             QLabel {
                 color: #333333;
                 font-size: 16px;
+                font-weight: bold;
             }
 
             QComboBox {
@@ -99,6 +105,7 @@ class MainWindow(QWidget):
 
             QPushButton {
                 background-color: #4CAF50;
+                font-weight: bold;
                 border: none;
                 color: white;
                 padding: 10px;
@@ -111,7 +118,7 @@ class MainWindow(QWidget):
             }
 
             QPushButton:hover {
-                opacity: 0.8;
+                background-color: green;
             }
         """
         App.setStyleSheet(style_sheet)  # Set style sheet to the application
