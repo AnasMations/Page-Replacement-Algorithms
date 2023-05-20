@@ -1,3 +1,52 @@
+def initialFramesInitializer(arr, Frames, PageAccessSequence):
+
+    counter = 1
+
+    pageFaults = 1
+
+    existedPages = []
+
+    i = 1
+
+    existedPages.append(PageAccessSequence[0])
+
+    arr[0][0] = PageAccessSequence[0]
+
+    while i < len(PageAccessSequence):
+
+        if( counter == Frames ):
+            return (arr, pageFaults, i)
+
+        pageValue = PageAccessSequence[i]
+
+        if( pageValue not in existedPages ):
+            
+            counter += 1
+
+            pageFaults += 1
+
+            existedPages.append(pageValue)
+
+            for j in range(Frames):
+
+                if( arr[j][i - 1] == -1 ):
+
+                    arr[j][i] = pageValue
+
+                    break
+                
+                else:
+                    arr[j][i] = arr[j][i - 1]
+        else:
+
+            for j in range(Frames):
+
+                arr[j][i] = arr[j][i - 1]
+
+        i += 1
+
+    return (arr, pageFaults, i)
+
 def optimalCaseOneInitializer(Frames, page, pageValue, arr):
     
     for frame in range(Frames):
@@ -142,17 +191,10 @@ def OPTIMAL(PageAccessSequence, Frames):
 
     # initialize the memory with initial frames
 
-    # (number of initial frames equals number of first n Frames in the PageAccessSequence)
-    for i in range(Frames):
-
-        outputPageFault += 1
-
-        for j in range(i, Frames):
-
-            outputFrames[i][j] = PageAccessSequence[i]
+    outputFrames, outputPageFault, i = initialFramesInitializer(outputFrames, Frames, PageAccessSequence)
 
 
-    for page in range(Frames, len(PageAccessSequence)):
+    for page in range(i, len(PageAccessSequence)):
 
         caseNumber, nonFoundPages = caseChecker(PageAccessSequence, outputFrames, Frames, page)
 
