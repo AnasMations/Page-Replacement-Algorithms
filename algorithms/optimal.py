@@ -1,7 +1,5 @@
 def initialFramesInitializer(arr, Frames, PageAccessSequence):
 
-    counter = 1
-
     pageFaults = 1
 
     existedPages = []
@@ -14,14 +12,12 @@ def initialFramesInitializer(arr, Frames, PageAccessSequence):
 
     while i < len(PageAccessSequence):
 
-        if( counter == Frames ):
+        if( pageFaults == Frames ):
             return (arr, pageFaults, i)
 
         pageValue = PageAccessSequence[i]
 
         if( pageValue not in existedPages ):
-            
-            counter += 1
 
             pageFaults += 1
 
