@@ -10,6 +10,7 @@ from algorithms.fifo import FIFO
 from algorithms.lru import LRU
 from algorithms.lfu import LFU
 from algorithms.optimal import OPTIMAL
+from algorithms.second_chance import secondChance
 
 from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
@@ -50,7 +51,7 @@ class MainWindow(QWidget):
 
         # Dropdown List
         self.dropdown_list = QComboBox()
-        self.dropdown_list.addItems(["FIFO", "LRU", "LFU", "OPTIMAL"])
+        self.dropdown_list.addItems(["FIFO", "LRU", "LFU", "OPTIMAL", "SECOND CHANCE"])
         top_layout.addWidget(self.dropdown_list)
 
         # Run Button
@@ -149,6 +150,8 @@ class MainWindow(QWidget):
             output_frames, output_page_fault = LFU(sequence, frames)
         elif algorithm_name == "OPTIMAL":
             output_frames, output_page_fault = OPTIMAL(sequence, frames)
+        elif algorithm_name == "SECOND CHANCE":
+            output_frames, output_page_fault = secondChance(sequence, frames)
 
         self.display_output(sequence, output_frames, output_page_fault)
 

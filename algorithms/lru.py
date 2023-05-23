@@ -1,4 +1,4 @@
-def lru(page_list, msize):
+def LRU(page_list, msize):
     mptr, hit, miss = 0, 0, 0
     memory = [-1 for _ in range(msize)]
     memory_states = []
@@ -39,12 +39,21 @@ def lru(page_list, msize):
         # Append current state of memory to memory_states list
         memory_states.append(list(memory))
 
-    return memory_states, miss
+        # Flip Memory List
+        new_memory = []
+        for i in range(msize): 
+            new_memory.append([])
+
+        for i in range(len(memory_states)):
+            for j in range(msize):
+                new_memory[j].append(memory_states[i][j])
+
+    return new_memory, miss
 
 
 inputPageAccessSequence = [7, 0, 2, 4, 3, 1, 4, 7, 2, 0, 4, 3, 0, 3, 2, 7]
 inputFrames = 3
-memory_list, page_faults = lru(inputPageAccessSequence, inputFrames)
+memory_list, page_faults = LRU(inputPageAccessSequence, inputFrames)
 
 print(page_faults)
 print( inputPageAccessSequence)
