@@ -6,28 +6,11 @@ This repository contains a desktop application that visualizes and compares the 
 - Least Recently Used (LRU)
 - Optimal (OPT)
 - Least Frequently Used (LFU)
+- Second Chance (SECOND CHANCE)
 
 The desktop application is built using Python and PyQt6.
 
-## Installation
-
-To run the desktop application, you will need to have Python 3.x and PyQt6 installed on your machine.
-
-```bash
-pip install PyQt6
-```
-
-Once you have Python and PyQt6 installed, clone this repository to your local machine.
-
 ## Usage
-
-To start the desktop application, open a terminal in the project directory and run the following command:
-
-```bash
-python main.py
-```
-
-This will start the application and you should see the main window.
 
 To use the page replacement simulator, follow these steps:
 
